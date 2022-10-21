@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="digit.js"></script>
+    <style>
+        * {
+            margin:0;
+            padding:0;
+        }
+        body {
+            height:100vh;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="cs"></canvas>
+    <script>
+        const ctx=cs.getContext('2d')
+        cs.style.background='red'
+        const color='lightblue'
+        const targetTime=parseInt(new Date().getTime()/1000+30*60)
+        let nowTime=null
+        let cs_W=document.body.clientWidth
+        let cs_H=document.body.clientHeight
+        cs.width=cs_W
+        cs.height=cs_H 
+        let ML=cs_W*1/10
+        let MT=cs_H*1/5
+        let r=cs_H*4/5/108 - 1 
+         window.addEventListener('resize',init)
+        setInterval(function(){
+            drawClock()
+            updateTime()
+        },500)
+        function init(){
+             cs_W=document.body.clientWidth
+             cs_H=document.body.clientHeight
+             cs.width=cs_W
+             cs.height=cs_H 
+             ML=cs_W*1/10
+             MT=cs_H*1/5
+             r=cs_H*4/5/108 - 1 
+        }
+        function updateTime(){
+            nowTime=parseInt(new Date().getTime()/1000)
+            let hours=0
+            let minutes=parseInt((targetTime - nowTime)/60)
+            let seconds=parseInt((targetTime - nowTime)%60)  
+            
+            let nextTime=parseInt(new Date().getTime()/1000)
+            let nextHours=0
+            let nextMinutes=parseInt((targetTime - nextTime)/60)
+            let nextSeconds=parseInt((targetTime - nextTime)%60) 
+              
+            if(nextSeconds!==seconds){
+                nowTime=nextTime
+            }
+        }
+       function drawClock(){
+        nowTime=parseInt(new Date().getTime()/1000)
+            let hours=0
+            let minutes=parseInt((targetTime - nowTime)/60)
+            let seconds=parseInt((targetTime - nowTime)%60)  
+            ctx.clearRect(0,0,cs_W,cs_H)
+            renderDigit(parseInt(hours/10),0)
+            renderDigit(parseInt(hours%10),15*(r+1))
+            renderDigit(10,30*(r+1))
+            renderDigit(parseInt(minutes/10),39*(r+1))
+            renderDigit(parseInt(minutes%10),54*(r+1))
+            renderDigit(10,69*(r+1))
+            renderDigit(parseInt(seconds/10),78*(r+1))
+            renderDigit(parseInt(seconds%10),93*(r+1))
+        }
+        function renderDigit(digit_NO,digit_W){
+            ctx.fillStyle=color
+            for(let i=0;i<digit[digit_NO].length;i++){
+                for(let j=0;j<digit[digit_NO][i].length;j++){
+                    if(digit[digit_NO][i][j]===1){
+                        ctx.save()
+                        ctx.beginPath()
+                        ctx.arc(digit_W+2*j*(r+1)+(r+1)+ML,2*i*(r+1)+(r+1)+MT,r,0,Math.PI*2)
+                        ctx.fill()
+                        ctx.closePath()
+                        ctx.restore()
+                    }                 
+                }
+            }
+        }
+    </script>
+</body>
+</html>
